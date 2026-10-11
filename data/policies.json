@@ -1,0 +1,64 @@
+[
+  {
+    "policy_id": "REFUND-001",
+    "policy_name": "Refund Policy",
+    "version": "2025-v1",
+    "effective_date": "2025-01-01",
+    "product": "premium_subscription",
+    "category": "refund",
+    "status": "inactive",
+    "text": "Premium Subscription customers can request a refund within 30 days of purchase. Approved refunds are processed within 7 business days."
+  },
+  {
+    "policy_id": "REFUND-001",
+    "policy_name": "Refund Policy",
+    "version": "2026-v2",
+    "effective_date": "2026-04-01",
+    "product": "premium_subscription",
+    "category": "refund",
+    "status": "active",
+    "text": "Premium Subscription customers can request a refund within 14 days of purchase. Refund requests submitted after 14 days are not automatically eligible for a refund. Approved refunds are processed within 5 business days."
+  },
+  
+{
+  "policy_id": "CANCEL-001",
+  "policy_name": "Subscription Cancellation Policy",
+  "version": "2025-v1",
+  "effective_date": "2025-02-01",
+  "product": "premium_subscription",
+  "category": "subscription",
+  "status": "inactive",
+  "text": "Premium subscriptions must be cancelled at least 48 hours before the next billing date to avoid renewal."
+},
+{
+  "policy_id": "CANCEL-001",
+  "policy_name": "Subscription Cancellation Policy",
+  "version": "2026-v2",
+  "effective_date": "2026-05-01",
+  "product": "premium_subscription",
+  "category": "subscription",
+  "status": "active",
+  "text": "Premium subscriptions can be cancelled at any time. Cancellation prevents the next billing cycle, but access continues until the current billing period ends."
+},
+
+{
+  "policy_id": "BILLING-001",
+  "policy_name": "Billing and Duplicate Charge Policy",
+  "version": "2026-v1",
+  "effective_date": "2026-03-01",
+  "product": "all_products",
+  "category": "billing",
+  "status": "active",
+  "text": "Customers who notice duplicate charges should report the transaction to customer support. Duplicate charge cases require transaction verification before a refund can be approved. Verified duplicate charges are eligible for a full refund."
+},
+{
+  "policy_id": "SECURITY-001",
+  "policy_name": "Account Security Policy",
+  "version": "2026-v1",
+  "effective_date": "2026-02-01",
+  "product": "all_products",
+  "category": "account_security",
+  "status": "active",
+  "text": "Accounts may be temporarily locked after multiple unsuccessful login attempts. Customers should use the password reset process to recover access. Cases involving suspected unauthorized access must be reviewed by a human support agent."
+}
+]
