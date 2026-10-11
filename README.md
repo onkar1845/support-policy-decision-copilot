@@ -1,16 +1,17 @@
 # AI Support Policy Decision Copilot
 
-A RAG-based decision-support API that helps customer-support agents retrieve current company policies, generate grounded responses, and escalate uncertain cases for human review.
+A RAG-based decision-support API that helps customer-support agents retrieve current company policies, generate grounded responses, and route uncertain cases for human review.
 
 ## Problem
 
 Customer-support agents often need to search multiple policy documents before responding to customers.
 
 Problems can occur when:
-- outdated policies are used
-- relevant information is difficult to find
+
+- Outdated policies are used
+- Relevant information is difficult to find
 - AI generates unsupported answers
-- uncertain cases are handled automatically
+- Uncertain cases are handled automatically
 
 This project uses Retrieval-Augmented Generation (RAG) to retrieve current policy information and generate evidence-backed responses.
 
@@ -21,29 +22,42 @@ This project uses Retrieval-Augmented Generation (RAG) to retrieve current polic
 - Active/inactive policy version filtering
 - Product-specific policy filtering
 - Top-K semantic retrieval
-- Retrieval distance threshold
+- Retrieval-distance filtering
 - Grounded Gemini responses
 - Structured LLM output using Pydantic
 - `ANSWER` or `HUMAN_REVIEW` decision
-- Evidence, policy source, and version returned with every supported answer
+- Evidence, source, and policy version in the response
 - Fallback when relevant policy information is unavailable
 - FastAPI REST API
 - Evaluation test cases
 
 ## Architecture
 
+```text
 Customer Question
-→ FastAPI Request Validation
-→ Query Embedding
-→ ChromaDB Retrieval
-→ Active Policy Filter
-→ Product Filter
-→ Top-K Search
-→ Distance Filtering
-→ Retrieved Evidence
-→ Gemini Grounded Generation
-→ ANSWER / HUMAN_REVIEW
-→ Evidence + Source + Policy Version
+        ↓
+FastAPI Request Validation
+        ↓
+Query Embedding
+        ↓
+ChromaDB Retrieval
+        ↓
+Active Policy Filter
+        ↓
+Product Filter
+        ↓
+Top-K Semantic Search
+        ↓
+Retrieval Distance Filter
+        ↓
+Relevant Policy Evidence
+        ↓
+Gemini Grounded Generation
+        ↓
+ANSWER / HUMAN_REVIEW
+        ↓
+Evidence + Source + Policy Version
+```
 
 ## Tech Stack
 
@@ -58,7 +72,7 @@ Customer Question
 
 ## Example Request
 
-POST `/ask`
+**POST** `/ask`
 
 ```json
 {
@@ -66,8 +80,11 @@ POST `/ask`
   "question": "My purchase was 18 days ago. Can I still get a refund?",
   "product": "premium_subscription"
 }
+```
 
-Example Response
+## Example Response
+
+```json
 {
   "answer": "Refund requests submitted after 14 days are not automatically eligible for a refund.",
   "decision": "HUMAN_REVIEW",
@@ -80,50 +97,84 @@ Example Response
   "policy_version": "2026-v2",
   "retrieval_distance": 0.4437
 }
+```
 
-Reliability
+## Reliability
+
 The system does not automatically trust every retrieved result.
+
 It applies:
-- active-policy filtering
-- product filtering
-- retrieval-distance filtering
-- grounded generation
-- human-review fallback
-Retrieval distance is treated as a distance metric, where a lower value represents a closer retrieved result. It is not presented as an AI confidence percentage.
-Evaluation
+
+- Active-policy filtering
+- Product filtering
+- Retrieval-distance filtering
+- Grounded generation
+- Human-review fallback
+
+Retrieval distance is treated as a distance metric where a lower value represents a closer retrieved result.
+
+It is not presented as an AI confidence percentage.
+
+## Evaluation
+
 The project was tested on 6 curated scenarios covering:
-- valid refund request
-- refund outside automatic window
-- duplicate billing
-- subscription cancellation
-- suspected account access
-- question not covered by the knowledge base
-Result:
-6/6 test scenarios passed
+
+- Valid refund request
+- Refund outside the automatic window
+- Duplicate billing
+- Subscription cancellation
+- Suspected unauthorized account access
+- Question not covered by the knowledge base
+
+**Result:** `6/6 test scenarios passed`
+
 This result applies only to the defined evaluation set and is not a claim of universal accuracy.
-Setup
-Create a virtual environment and install dependencies:
+
+## Setup
+
+### 1. Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-Create a .env file:
+### 2. Create Environment File
+
+Create a `.env` file in the project root:
+
+```env
 GEMINI_API_KEY=your_api_key
+```
 
-Index policies:
+### 3. Index Policies
+
+```bash
 python -m scripts.index_policies
+```
 
-Start the API:
+### 4. Start the FastAPI Server
+
+```bash
 uvicorn app.main:app --reload
+```
 
-Open Swagger documentation:
+### 5. Open Swagger API Documentation
+
+```text
 http://127.0.0.1:8000/docs
-Project Structure
+```
 
+## Project Structure
+
+```text
 support-policy-decision-copilot/
 ├── app/
+│   ├── __init__.py
 │   ├── main.py
 │   ├── config.py
 │   ├── schemas.py
 │   └── rag/
+│       ├── __init__.py
 │       ├── chunking.py
 │       ├── embeddings.py
 │       ├── vector_store.py
@@ -141,15 +192,20 @@ support-policy-decision-copilot/
 ├── .env.example
 ├── .gitignore
 └── README.md
+```
 
-What I Learned
-Through this project I learned how to:
-- build an end-to-end RAG pipeline
-- generate and store embeddings
-- perform semantic search with a vector database
-- use metadata filtering for policy versioning
-- handle weak or missing retrieval
-- ground an LLM using retrieved evidence
-- validate structured LLM responses using Pydantic
-- expose a RAG workflow through FastAPI
-- evaluate retrieval and decision behavior
+## What I Learned
+
+Through this project, I learned how to:
+
+- Build an end-to-end RAG pipeline
+- Generate and store embeddings
+- Perform semantic search using a vector database
+- Use metadata filtering for policy versioning
+- Filter policies based on product applicability
+- Handle weak or missing retrieval results
+- Ground an LLM using retrieved evidence
+- Validate structured LLM responses using Pydantic
+- Build `ANSWER` and `HUMAN_REVIEW` decision logic
+- Expose a RAG workflow through FastAPI
+- Evaluate retrieval and decision behavior
